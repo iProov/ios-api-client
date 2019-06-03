@@ -3,20 +3,25 @@
   "version": "0.1.0",
   "summary": "A short description of iProovAPIClient.",
   "description": "TODO: Add long description of the pod here.",
-  "homepage": "https://github.com/jonathanellis/iProovAPIClient",
+  "homepage": "https://github.com/iproov/ios-api-client",
   "license": {
     "type": "MIT",
     "file": "LICENSE"
   },
   "authors": {
-    "jonathanellis": "jon@than.biz"
+    "jonathanellis": "jonathan.ellis@iproov.com"
   },
   "source": {
-    "git": "https://github.com/jonathanellis/iProovAPIClient.git",
+    "git": "https://github.com/iProov/ios-api-client.git",
     "tag": "0.1.0"
   },
   "platforms": {
-    "ios": "8.0"
+    "ios": "9.0"
   },
-  "source_files": "iProovAPIClient/Classes/**/*"
+  "source_files": "iProovAPIClient/Classes/**/*",
+  "dependencies": {
+    "Alamofire-SwiftyJSON": [
+      "~> 3.0"
+    ]
+  }
 }

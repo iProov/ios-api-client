@@ -2,6 +2,6 @@ use_frameworks!
 target 'iProovAPIClient_Tests' do
   pod 'iProovAPIClient', :path => '../'
   
-  pod 'Quick', '~> 1.2.0'
-    pod 'Nimble', '~> 7.0.2'
+  pod 'Quick', '~> 2.1'
+  pod 'Nimble', '~> 8.0'
 end

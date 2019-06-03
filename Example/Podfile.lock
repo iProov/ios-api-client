@@ -1,27 +1,39 @@
 PODS:
-  - iProovAPIClient (0.1.0)
-  - Nimble (7.0.3)
-  - Quick (1.2.0)
+  - Alamofire (4.8.2)
+  - Alamofire-SwiftyJSON (3.0.0):
+    - Alamofire (~> 4.5)
+    - SwiftyJSON (~> 4.0.0)
+  - iProovAPIClient (0.1.0):
+    - Alamofire-SwiftyJSON (~> 3.0)
+  - Nimble (8.0.1)
+  - Quick (2.1.0)
+  - SwiftyJSON (4.0.0)
 
 DEPENDENCIES:
   - iProovAPIClient (from `../`)
-  - Nimble (~> 7.0.2)
-  - Quick (~> 1.2.0)
+  - Nimble (~> 8.0)
+  - Quick (~> 2.1)
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
+    - Alamofire
+    - Alamofire-SwiftyJSON
     - Nimble
     - Quick
+    - SwiftyJSON
 
 EXTERNAL SOURCES:
   iProovAPIClient:
     :path: "../"
 
 SPEC CHECKSUMS:
-  iProovAPIClient: 5e17b2f299b1e387ad3f2ee98a1c3039566c392f
-  Nimble: 7f5a9c447a33002645a071bddafbfb24ea70e0ac
-  Quick: 58d203b1c5e27fff7229c4c1ae445ad7069a7a08
+  Alamofire: ae5c501addb7afdbb13687d7f2f722c78734c2d3
+  Alamofire-SwiftyJSON: 2b3649d57dc7bb2880fb8b86f8bb969397666916
+  iProovAPIClient: 26b84aab4203180f8aa6d429e2f23e250092540d
+  Nimble: 45f786ae66faa9a709624227fae502db55a8bdd0
+  Quick: 4be43f6634acfa727dd106bdf3929ce125ffa79d
+  SwiftyJSON: 070dabdcb1beb81b247c65ffa3a79dbbfb3b48aa
 
-PODFILE CHECKSUM: b0843485864077260212fa034187879f28e6ca5d
+PODFILE CHECKSUM: 428a02e4e06211b6a6e3fbbf15c467901e5c00f6
 
 COCOAPODS: 1.6.2
