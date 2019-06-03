@@ -1,0 +1,27 @@
+PODS:
+  - iProovAPIClient (0.1.0)
+  - Nimble (7.0.3)
+  - Quick (1.2.0)
+
+DEPENDENCIES:
+  - iProovAPIClient (from `../`)
+  - Nimble (~> 7.0.2)
+  - Quick (~> 1.2.0)
+
+SPEC REPOS:
+  https://github.com/cocoapods/specs.git:
+    - Nimble
+    - Quick
+
+EXTERNAL SOURCES:
+  iProovAPIClient:
+    :path: "../"
+
+SPEC CHECKSUMS:
+  iProovAPIClient: 5e17b2f299b1e387ad3f2ee98a1c3039566c392f
+  Nimble: 7f5a9c447a33002645a071bddafbfb24ea70e0ac
+  Quick: 58d203b1c5e27fff7229c4c1ae445ad7069a7a08
+
+PODFILE CHECKSUM: b0843485864077260212fa034187879f28e6ca5d
+
+COCOAPODS: 1.6.2
