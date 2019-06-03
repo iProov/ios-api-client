@@ -15,6 +15,8 @@ import Foundation
 import Alamofire
 import Alamofire_SwiftyJSON
 
+private let appID = Bundle.main.object(forInfoDictionaryKey: "CFBundleIdentifier") as! String
+
 public enum ClaimType: String {
     case enrol, verify
 }
@@ -45,12 +47,10 @@ public class APIClient {
         
         let url = String(format: "%@/claim/%@/token", baseURL, type.rawValue)
 
-        let appId = Bundle.main.object(forInfoDictionaryKey: "CFBundleIdentifier") as! String
-
         let params = [
             "api_key": apiKey,
             "secret": secret,
-            "resource": appId,
+            "resource": appID,
             "client": "ios",
             "user_id": userID
         ]
@@ -125,23 +125,48 @@ public class APIClient {
 
     }
 
+    public func validate(token: String, userID: String, success: @escaping (ValidationResult) -> Void, failure: @escaping (Error) -> Void) {
+
+        let url = String(format: "%@/claim/verify/validate", baseURL)
+
+        let params = [
+            "api_key": apiKey,
+            "secret": secret,
+            "user_id": userID,
+            "token": token,
+            "ip": "127.0.0.1",
+            "client": appID
+        ]
+
+        Alamofire.request(url, method: .post, parameters: params, encoding: JSONEncoding(), headers: nil)
+            .validate()
+            .responseSwiftyJSON { (response) in
+
+                switch response.result {
+                case let .success(json):
+                    let validationResult = ValidationResult(json: json)
+                    success(validationResult)
+
+                case let .failure(error):
+                    failure(error)
+
+                }
+        }
+    }
+
 }
 
-private extension UIImage {
+public extension APIClient {
 
-    /* UIImage.jpegData() returns nil for non-CGImage backed UIImages, for example those generated from Core Image.
-     This method is safer as it will attempt to re-draw the image to a new context if necessary.
-    */
-    func safeJPEGData(compressionQuality: CGFloat) -> Data? {
-        guard cgImage == nil else {
-            return self.jpegData(compressionQuality: compressionQuality)
-        }
+    // This helper function chains together the 3 calls needed to enrol photo and get a token to iProov against:
+    func enrolPhotoAndGetVerifyToken(userID: String, image: UIImage, source: PhotoSource, success: @escaping (_ token: String) -> Void, failure: @escaping (Error) -> Void) {
 
-        guard let ciImage = ciImage,
-            let cgImage = CIContext(options: nil).createCGImage(ciImage, from: ciImage.extent)
-            else { return nil }
+        getToken(type: .enrol, userID: userID, success: { (token) in
+            self.enrolPhoto(token: token, image: image, source: source, success: { (token) in
+                self.getToken(type: .verify, userID: userID, success: success, failure: failure)
+            }, failure: failure)
+        }, failure: failure)
 
-        return UIImage(cgImage: cgImage).jpegData(compressionQuality: compressionQuality)
     }
 
 }
@@ -154,8 +179,7 @@ private extension MultipartFormData {
     }
 
     func append(_ int: Int, withName name: String) {
-        var aInt = int
-        let data = Data(bytes: &aInt, count: MemoryLayout.size(ofValue: aInt))
+        let data = withUnsafeBytes(of: int) { Data($0) }
         append(data, withName: name)
     }
 
