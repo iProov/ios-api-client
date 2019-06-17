@@ -1,29 +1,20 @@
-# iProovAPIClient
+# iProov API Swift Client
 
-[![CI Status](https://img.shields.io/travis/jonathanellis/iProovAPIClient.svg?style=flat)](https://travis-ci.org/jonathanellis/iProovAPIClient)
-[![Version](https://img.shields.io/cocoapods/v/iProovAPIClient.svg?style=flat)](https://cocoapods.org/pods/iProovAPIClient)
-[![License](https://img.shields.io/cocoapods/l/iProovAPIClient.svg?style=flat)](https://cocoapods.org/pods/iProovAPIClient)
-[![Platform](https://img.shields.io/cocoapods/p/iProovAPIClient.svg?style=flat)](https://cocoapods.org/pods/iProovAPIClient)
+## 👋 Introduction
 
-## Example
+The iProov API Swift Client is a simple wrapper for the [iProov REST API](https://secure.iproov.me/docs.html) written in Swift and using [Alamofire](https://github.com/Alamofire/Alamofire) & [SwiftyJSON](https://github.com/SwiftyJSON/Alamofire-SwiftyJSON) for the HTTP networking and JSON serialization/deserialization.
 
-To run the example project, clone the repo, and run `pod install` from the Example directory first.
+v7 of the [iProov SDK](https://github.com/iProov/ios) removed the built-in functionality to obtain tokens from the core SDK. This library therefore provides that missing functionality as a separate library, and also exposes additional functionality such as the ability to enrol photos.
 
-## Requirements
+## ⚠️ Important security notice
 
-## Installation
+The iProov REST API should only called directly from your back-end, however this library is designed to help you with debugging/evaluating the [iProov iOS SDK](https://github.com/iProov/ios), to get up and running quickly with a pure on-device demo.
 
-iProovAPIClient is available through [CocoaPods](https://cocoapods.org). To install
-it, simply add the following line to your Podfile:
+Use of the iProov API Client requires providing it with your API secret. **You should never embed your API secret within a production app**. 
 
-```ruby
-pod 'iProovAPIClient'
-```
+## 🛠 Supported functionality
 
-## Author
-
-jonathanellis, jon@than.biz
-
-## License
-
-iProovAPIClient is available under the MIT license. See the LICENSE file for more info.
+- **`getToken()`** - Get an enrol/verify token
+- **`enrolPhoto()`** - Once you have an enrolment token, you can enrol a photo against it
+- **`validate()`** - Validates an existing token
+- **`enrolPhotoAndGetVerifyToken()`** - A helper function which chains together `getToken()` for the enrolment token, `enrolPhoto()` to enrol the photo, and then `getToken()` for the verify token, which you can then use to launch the SDK.
