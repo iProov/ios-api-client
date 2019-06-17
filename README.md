@@ -12,9 +12,32 @@ The iProov REST API should only called directly from your back-end, however this
 
 Use of the iProov API Client requires providing it with your API secret. **You should never embed your API secret within a production app**. 
 
+Of course, if by any chance you happen to use Swift on your [back](https://vapor.codes/)-[end](https://perfect.org/) then you can probably use this code with a few modifications. 
+
 ## 🛠 Supported functionality
 
-- **`getToken()`** - Get an enrol/verify token
-- **`enrolPhoto()`** - Once you have an enrolment token, you can enrol a photo against it
-- **`validate()`** - Validates an existing token
+- **`getToken()`** - Get an enrol/verify token.
+- **`enrolPhoto()`** - Once you have an enrolment token, you can enrol a photo against it.
+- **`validate()`** - Validates an existing token.
 - **`enrolPhotoAndGetVerifyToken()`** - A helper function which chains together `getToken()` for the enrolment token, `enrolPhoto()` to enrol the photo, and then `getToken()` for the verify token, which you can then use to launch the SDK.
+
+## 🤳 Example
+
+Example of using iProov API Client together with iProov to get a verify token for an existing user and then launch the iProov SDK to perform the verification:
+
+```
+import iProovAPIClient
+import iProov
+
+let apiClient = APIClient(baseURL: "https://eu.rp.secure.iproov.me/api/v2",
+                          apiKey: "{{ your API key }}",
+                          secret: "{{ your API secret }}")
+ 
+apiClient.getToken(type: .verify, userID: "user@example.com", success: { (token) in
+
+	IProov.launch(token: token, animated: true, callback: { (status) in
+		...
+	})
+
+})
+```
