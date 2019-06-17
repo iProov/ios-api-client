@@ -1,18 +1,18 @@
-# iProov API Swift Client
+# iProov Swift API Client
 
 ## 👋 Introduction
 
-The iProov API Swift Client is a simple wrapper for the [iProov REST API](https://secure.iproov.me/docs.html) written in Swift and using [Alamofire](https://github.com/Alamofire/Alamofire) & [SwiftyJSON](https://github.com/SwiftyJSON/Alamofire-SwiftyJSON) for the HTTP networking and JSON serialization/deserialization.
+The iProov Swift API Client is a simple wrapper for the [iProov REST API](https://secure.iproov.me/docs.html) written in Swift and using [Alamofire](https://github.com/Alamofire/Alamofire) & [SwiftyJSON](https://github.com/SwiftyJSON/Alamofire-SwiftyJSON) for the HTTP networking and JSON serialization/deserialization. We also have a Kotlin API client available [here](https://github.com/iProov/kotlin-api-client).
 
-v7 of the [iProov SDK](https://github.com/iProov/ios) removed the built-in functionality to obtain tokens from the core SDK. This library therefore provides that missing functionality as a separate library, and also exposes additional functionality such as the ability to enrol photos.
+v7 of the [iProov SDK](https://github.com/iProov/ios) removed the built-in functionality to obtain tokens from the core SDK. This library therefore provides that missing functionality as a separate library, and also provides additional functionality such as the ability to enrol photos.
 
 ## ⚠️ Important security notice
 
-The iProov REST API should only called directly from your back-end, however this library is designed to help you with debugging/evaluating the [iProov iOS SDK](https://github.com/iProov/ios), to get up and running quickly with a pure on-device demo.
+The iProov REST API should only ever be called directly from your back-end, however this library is designed to help you with debugging/evaluating the [iProov iOS SDK](https://github.com/iProov/ios), to get up-and-running quickly with a pure on-device demo.
 
 Use of the iProov API Client requires providing it with your API secret. **You should never embed your API secret within a production app**. 
 
-Of course, if by any chance you happen to use Swift on your [back](https://vapor.codes/)-[end](https://perfect.org/) then you can probably use this code with a few modifications. 
+...But of course, if by any chance you happen to use Swift on your [back](https://vapor.codes/)-[end](https://perfect.org/) then you can probably use this code on your server, with just a few modifications.
 
 ## 🛠 Supported functionality
 
