@@ -2,9 +2,9 @@
 
 ## 👋 Introduction
 
-The iProov Swift API Client is a simple wrapper for the [iProov REST API](https://secure.iproov.me/docs.html) written in Swift and using [Alamofire](https://github.com/Alamofire/Alamofire) & [SwiftyJSON](https://github.com/SwiftyJSON/Alamofire-SwiftyJSON) for the HTTP networking and JSON serialization/deserialization. We also have a Kotlin API client available [here](https://github.com/iProov/kotlin-api-client).
+The iProov Swift API Client is a simple wrapper for the [iProov REST API v2](https://secure.iproov.me/docs.html) written in Swift and using [Alamofire](https://github.com/Alamofire/Alamofire) & [SwiftyJSON](https://github.com/SwiftyJSON/Alamofire-SwiftyJSON) for the HTTP networking and JSON serialization/deserialization. We also have a Kotlin API client available [here](https://github.com/iProov/kotlin-api-client).
 
-v7 of the [iProov SDK](https://github.com/iProov/ios) removed the built-in functionality to obtain tokens from the core SDK. This library therefore provides that missing functionality as a separate library, and also provides additional functionality such as the ability to enrol photos.
+v7 of the [iProov SDK](https://github.com/iProov/ios) removed the built-in functionality to obtain tokens using the SDK. This library therefore provides that missing functionality as a separate library, and also provides additional functionality such as the ability to enrol photos.
 
 ## ⚠️ Important security notice
 
