@@ -10,9 +10,19 @@ v7 of the [iProov SDK](https://github.com/iProov/ios) removed the built-in funct
 
 The iProov REST API should only ever be called directly from your back-end, however this library is designed to help you with debugging/evaluating the [iProov iOS SDK](https://github.com/iProov/ios), to get up-and-running quickly with a pure on-device demo.
 
-Use of the iProov API Client requires providing it with your API secret. **You should never embed your API secret within a production app**. 
+Use of the Swift API Client requires providing it with your API secret. **You should never embed your API secret within a production app**. 
 
 ...But of course, if by any chance you happen to use Swift on your [back](https://vapor.codes/)-[end](https://perfect.org/) then you can probably use this code on your server, with just a few modifications.
+
+## 📲 Installation
+
+The Swift API Client is distributed as a Cocoapods dependency. Simply add the following line to your Podfile:
+
+```
+pod 'iProovAPIClient', :git => 'https://github.com/iProov/swift-api-client.git'
+```
+
+And then run `pod install`.
 
 ## 🛠 Supported functionality
 
@@ -20,6 +30,8 @@ Use of the iProov API Client requires providing it with your API secret. **You s
 - **`enrolPhoto()`** - Once you have an enrolment token, you can enrol a photo against it.
 - **`validate()`** - Validates an existing token.
 - **`enrolPhotoAndGetVerifyToken()`** - A helper function which chains together `getToken()` for the enrolment token, `enrolPhoto()` to enrol the photo, and then `getToken()` for the verify token, which you can then use to launch the SDK.
+
+You can find the API-calling code [here](https://github.com/iProov/swift-api-client/blob/master/iProovAPIClient/Classes/APIClient.swift).
 
 ## 🤳 Example
 
@@ -41,3 +53,7 @@ apiClient.getToken(type: .verify, userID: "user@example.com", success: { (token)
 
 })
 ```
+
+## ⚖️ License
+
+The iProov Swift API Client is licensed under the BSD-3 license.

@@ -92,6 +92,7 @@ public class APIClient {
             multipartFormData.append(0, withName: "rotation")
             multipartFormData.append(token, withName: "token")
             multipartFormData.append(jpegData, withName: "image", fileName: "image.jpg", mimeType: "image/jpeg")
+            multipartFormData.append(source.rawValue, withName: "source")
 
         }, to: url, encodingCompletion: { (encodingResult) in
 
@@ -171,16 +172,3 @@ public extension APIClient {
 
 }
 
-private extension MultipartFormData {
-
-    func append(_ string: String, withName name: String) {
-        guard let data = string.data(using: .utf8) else { fatalError() }
-        append(data, withName: name)
-    }
-
-    func append(_ int: Int, withName name: String) {
-        let data = withUnsafeBytes(of: int) { Data($0) }
-        append(data, withName: name)
-    }
-
-}
