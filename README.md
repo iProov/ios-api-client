@@ -1,8 +1,8 @@
-# iProov Swift API Client
+# iProov iOS API Client
 
 ## 👋 Introduction
 
-The iProov Swift API Client is a simple wrapper for the [iProov REST API v2](https://secure.iproov.me/docs.html) written in Swift and using [Alamofire](https://github.com/Alamofire/Alamofire) & [SwiftyJSON](https://github.com/SwiftyJSON/Alamofire-SwiftyJSON) for the HTTP networking and JSON serialization/deserialization. We also have a Kotlin API client available [here](https://github.com/iProov/kotlin-api-client).
+The iProov iOS API Client is a simple wrapper for the [iProov REST API v2](https://secure.iproov.me/docs.html) written in Swift and using [Alamofire](https://github.com/Alamofire/Alamofire) & [SwiftyJSON](https://github.com/SwiftyJSON/Alamofire-SwiftyJSON) for the HTTP networking and JSON serialization/deserialization. We also have a Kotlin API client available [here](https://github.com/iProov/kotlin-api-client).
 
 v7 of the [iProov SDK](https://github.com/iProov/ios) removed the built-in functionality to obtain tokens using the SDK. This library therefore provides that missing functionality as a separate library, and also provides additional functionality such as the ability to enrol photos.
 
@@ -10,16 +10,16 @@ v7 of the [iProov SDK](https://github.com/iProov/ios) removed the built-in funct
 
 The iProov REST API should only ever be called directly from your back-end, however this library is designed to help you with debugging/evaluating the [iProov iOS SDK](https://github.com/iProov/ios), to get up-and-running quickly with a pure on-device demo.
 
-Use of the Swift API Client requires providing it with your API secret. **You should never embed your API secret within a production app**. 
+Use of the iOS API Client requires providing it with your API secret. **You should never embed your API secret within a production app**. 
 
-...But of course, if by any chance you happen to use Swift on your [back](https://vapor.codes/)-[end](https://perfect.org/) then you can probably use this code on your server, with just a few modifications.
+...But of course, if by any chance you happen to use Swift on your [back](https://vapor.codes/)-[end](https://perfect.org/) then you can probably use this code on your server, with just a few modifications (for example, you will need to handle images without UIKit).
 
 ## 📲 Installation
 
-The Swift API Client is distributed as a Cocoapods dependency. Simply add the following line to your Podfile:
+The iOS API Client is distributed as a Cocoapods dependency. Simply add the following line to your Podfile:
 
 ```
-pod 'iProovAPIClient', :git => 'https://github.com/iProov/swift-api-client.git'
+pod 'iProovAPIClient', :git => 'https://github.com/iProov/ios-api-client.git'
 ```
 
 And then run `pod install`.
@@ -56,4 +56,4 @@ apiClient.getToken(type: .verify, userID: "user@example.com", success: { (token)
 
 ## ⚖️ License
 
-The iProov Swift API Client is licensed under the BSD-3 license.
+The iProov iOS API Client is licensed under the BSD-3 license.
