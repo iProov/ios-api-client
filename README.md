@@ -47,10 +47,14 @@ let apiClient = APIClient(baseURL: "https://eu.rp.secure.iproov.me/api/v2",
  
 apiClient.getToken(type: .verify, userID: "user@example.com", success: { (token) in
 
-	IProov.launch(token: token, animated: true, callback: { (status) in
+	IProov.launch(token: token, callback: { (status) in
 		...
 	})
 
+}, failure: { (error) in
+
+	print(error)
+            
 })
 ```
 
