@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = 'iProovAPIClient'
-  s.version          = '0.1.0'
+  s.version          = '0.2.0'
   s.summary          = 'iOS API Client for iProov REST API v2'
   s.homepage         = 'https://github.com/iproov/ios-api-client'
   s.license          = { :type => 'BSD-3', :file => 'LICENSE' }
@@ -9,5 +9,6 @@ Pod::Spec.new do |s|
   s.ios.deployment_target = '9.0'
   s.source_files = 'iProovAPIClient/Classes/**/*'
 
-  s.dependency 'Alamofire-SwiftyJSON', '~> 3.0'
+  s.dependency 'Alamofire', '~> 4.9' # Cannot upgrade to 5.0 as requires min deployment target 10.0
+  s.dependency 'SwiftyJSON', '~> 5.0'
 end

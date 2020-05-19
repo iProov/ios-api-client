@@ -13,7 +13,7 @@
 
 import Foundation
 import Alamofire
-import Alamofire_SwiftyJSON
+import SwiftyJSON
 
 private let appID = Bundle.main.object(forInfoDictionaryKey: "CFBundleIdentifier") as! String
 
@@ -172,3 +172,33 @@ public extension APIClient {
 
 }
 
+extension DataRequest {
+
+    public static func swiftyJSONResponseSerializer() -> DataResponseSerializer<JSON> {
+        return DataResponseSerializer { _, response, data, error in
+
+            guard error == nil else { return .failure(error!) }
+
+            if let response = response, [204, 205].contains(response.statusCode) { return .success(.null) }
+
+            guard let validData = data, validData.count > 0 else {
+                return .failure(AFError.responseSerializationFailed(reason: .inputDataNilOrZeroLength))
+            }
+
+            do {
+                let json = try JSON(data: validData)
+                return .success(json)
+            } catch {
+                return .failure(AFError.responseSerializationFailed(reason: .jsonSerializationFailed(error: error)))
+            }
+
+        }
+    }
+
+    @discardableResult
+    public func responseSwiftyJSON(completionHandler: @escaping (DataResponse<JSON>) -> Void) -> Self {
+        return response(responseSerializer: DataRequest.swiftyJSONResponseSerializer(),
+            completionHandler: completionHandler
+        )
+    }
+}
