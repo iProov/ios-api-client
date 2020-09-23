@@ -1,9 +1,4 @@
-//
-//  ValidationResult.swift
-//  iProovAPIClient
-//
-//  Created by Jonathan Ellis on 03/06/2019.
-//
+// Copyright (c) 2020 iProov Ltd. All rights reserved.
 
 import Foundation
 import SwiftyJSON
@@ -20,5 +15,4 @@ public struct ValidationResult {
         frame = json["frame"].base64EncodedImage
         failureReason = json["result"]["reason"].string
     }
-
 }

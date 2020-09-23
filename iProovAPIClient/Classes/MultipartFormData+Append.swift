@@ -1,15 +1,9 @@
-//
-//  MultipartFormData+Append.swift
-//  iProovAPIClient
-//
-//  Created by Jonathan Ellis on 18/06/2019.
-//
+// Copyright (c) 2020 iProov Ltd. All rights reserved.
 
-import Foundation
 import Alamofire
+import Foundation
 
 extension MultipartFormData {
-
     func append(_ string: String, withName name: String) {
         guard let data = string.data(using: .utf8) else { fatalError() }
         append(data, withName: name)
@@ -19,5 +13,4 @@ extension MultipartFormData {
         let data = withUnsafeBytes(of: int) { Data($0) }
         append(data, withName: name)
     }
-
 }
