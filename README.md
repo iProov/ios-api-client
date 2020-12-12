@@ -35,7 +35,7 @@ You can find the API-calling code [here](https://github.com/iProov/swift-api-cli
 
 Example of using iProov API Client together with iProov to get a verify token for an existing user and then launch the iProov SDK to perform the verification using Genuine Presence Assurance:
 
-```
+```swift
 import iProovAPIClient
 import iProov
 
