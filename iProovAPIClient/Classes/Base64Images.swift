@@ -1,4 +1,4 @@
-// Copyright (c) 2020 iProov Ltd. All rights reserved.
+// Copyright (c) 2021 iProov Ltd. All rights reserved.
 
 import SwiftyJSON
 import UIKit
@@ -10,7 +10,7 @@ extension JSON {
     }
 
     var base64EncodedImageValue: UIImage {
-        return base64EncodedImage ?? UIImage()
+        base64EncodedImage ?? UIImage()
     }
 }
 
@@ -21,6 +21,6 @@ extension UIImage {
     }
 
     var base64String: String {
-        return jpegData(compressionQuality: 0.9)!.base64EncodedString()
+        jpegData(compressionQuality: 0.9)!.base64EncodedString()
     }
 }

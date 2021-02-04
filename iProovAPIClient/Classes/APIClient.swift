@@ -1,4 +1,4 @@
-// Copyright (c) 2020 iProov Ltd. All rights reserved.
+// Copyright (c) 2021 iProov Ltd. All rights reserved.
 
 // ⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️
 //    THIS CODE IS PROVIDED FOR DEMO PURPOSES ONLY AND SHOULD NOT BE USED IN
@@ -42,10 +42,15 @@ public class APIClient {
         self.secret = secret
     }
 
-    public func getToken(assuranceType: AssuranceType = .genuinePresence, type: ClaimType, userID: String, success: @escaping (_ token: String) -> Void, failure: @escaping (Error) -> Void) {
+    public func getToken(assuranceType: AssuranceType = .genuinePresence,
+                         type: ClaimType,
+                         userID: String,
+                         additionalOptions: [String: Any] = [:],
+                         success: @escaping (_ token: String) -> Void,
+                         failure: @escaping (Error) -> Void) {
         let url = String(format: "%@/claim/%@/token", baseURL, type.rawValue)
 
-        let params = [
+        var params: [String: Any] = [
             "assurance_type": assuranceType.rawValue,
             "api_key": apiKey,
             "secret": secret,
@@ -53,6 +58,10 @@ public class APIClient {
             "client": "ios",
             "user_id": userID,
         ]
+
+        for (key, value) in additionalOptions {
+            params[key] = value
+        }
 
         Alamofire.request(url, method: .post, parameters: params, encoding: JSONEncoding(), headers: nil)
             .validate()
@@ -161,7 +170,7 @@ public extension APIClient {
 
 extension DataRequest {
     public static func swiftyJSONResponseSerializer() -> DataResponseSerializer<JSON> {
-        return DataResponseSerializer { _, response, data, error in
+        DataResponseSerializer { _, response, data, error in
 
             guard error == nil else { return .failure(error!) }
 
@@ -182,7 +191,7 @@ extension DataRequest {
 
     @discardableResult
     public func responseSwiftyJSON(completionHandler: @escaping (DataResponse<JSON>) -> Void) -> Self {
-        return response(responseSerializer: DataRequest.swiftyJSONResponseSerializer(),
-                        completionHandler: completionHandler)
+        response(responseSerializer: DataRequest.swiftyJSONResponseSerializer(),
+                 completionHandler: completionHandler)
     }
 }
