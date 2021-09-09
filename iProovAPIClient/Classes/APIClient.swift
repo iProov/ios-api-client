@@ -6,9 +6,10 @@
 //      THESE API CALLS SHOULD ONLY EVER BE MADE FROM YOUR BACK-END SERVER
 // ⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️
 
-import Alamofire
 import Foundation
-import SwiftyJSON
+import Alamofire
+
+typealias JSON = [String: Any]
 
 private let appID = Bundle.main.object(forInfoDictionaryKey: "CFBundleIdentifier") as! String
 
@@ -21,8 +22,9 @@ public enum AssuranceType: String {
     case liveness
 }
 
-public enum APIClientError: Error {
-    case invalidImage, noToken
+public enum Result<T> {
+    case success(T)
+    case failure(Error)
 }
 
 public class APIClient {
@@ -35,19 +37,36 @@ public class APIClient {
         case opticalID = "oid"
     }
 
-    public init(baseURL: String = "https://eu.rp.secure.iproov.me/api/v2", apiKey: String, secret: String) {
-        #warning("You should never embed your API secret in client code.")
+    public enum Error: Swift.Error, LocalizedError {
+        case invalidImage, noToken, invalidJSON, serverError(String)
+
+        public var errorDescription: String? {
+            switch self {
+            case .invalidImage:
+                return "Invalid image"
+            case .noToken:
+                return "No token"
+            case .invalidJSON:
+                return "Invalid JSON"
+            case let .serverError(errorDescription):
+                return errorDescription
+            }
+        }
+    }
+
+    public init(baseURL: String, apiKey: String, secret: String) {
+        #warning("You should never embed your API key/secret in client code!")
         self.baseURL = baseURL
         self.apiKey = apiKey
         self.secret = secret
     }
 
-    public func getToken(assuranceType: AssuranceType = .genuinePresence,
+    public func getToken(assuranceType: AssuranceType,
                          type: ClaimType,
                          userID: String,
                          additionalOptions: [String: Any] = [:],
-                         success: @escaping (_ token: String) -> Void,
-                         failure: @escaping (Error) -> Void) {
+                         completion: @escaping (Result<String>) -> Void) {
+
         let url = String(format: "%@/claim/%@/token", baseURL, type.rawValue)
 
         var params: [String: Any] = [
@@ -63,34 +82,24 @@ public class APIClient {
             params[key] = value
         }
 
-        Alamofire.request(url, method: .post, parameters: params, encoding: JSONEncoding(), headers: nil)
-            .validate()
-            .responseSwiftyJSON { response in
-
-                switch response.result {
-                case let .success(json):
-
-                    if let token = json["token"].string {
-                        success(token)
-                    } else {
-                        failure(APIClientError.noToken)
-                    }
-
-                case let .failure(error):
-                    failure(error)
-                }
-            }
+        AF.request(url, method: .post, parameters: params, encoding: JSONEncoding(), headers: nil)
+            .validate(statusCode: 200..<500)
+            .responseToken(completionHandler: completion)
     }
 
-    public func enrolPhoto(token: String, image: UIImage, source: PhotoSource, success: @escaping (_ token: String) -> Void, failure: @escaping (Error) -> Void) {
+    public func enrolPhoto(token: String,
+                           image: UIImage,
+                           source: PhotoSource,
+                           completion: @escaping (Result<String>) -> Void) {
+
         let url = String(format: "%@/claim/enrol/image", baseURL)
 
         guard let jpegData = image.safeJPEGData(compressionQuality: 1.0) else {
-            failure(APIClientError.invalidImage)
+            completion(.failure(Error.invalidImage))
             return
         }
 
-        Alamofire.upload(multipartFormData: { multipartFormData in
+        AF.upload(multipartFormData: { multipartFormData in
 
             multipartFormData.append(self.apiKey, withName: "api_key")
             multipartFormData.append(self.secret, withName: "secret")
@@ -99,37 +108,15 @@ public class APIClient {
             multipartFormData.append(jpegData, withName: "image", fileName: "image.jpg", mimeType: "image/jpeg")
             multipartFormData.append(source.rawValue, withName: "source")
 
-        }, to: url, encodingCompletion: { encodingResult in
-
-            switch encodingResult {
-            case let .success(request, _, _):
-
-                request.validate().responseSwiftyJSON(completionHandler: { response in
-
-                    switch response.result {
-                    case let .success(json):
-
-                        if let token = json["token"].string {
-                            success(token)
-                        } else {
-                            failure(APIClientError.noToken)
-                        }
-
-                    case let .failure(error):
-                        failure(error)
-                    }
-
-                })
-
-            case let .failure(error):
-
-                failure(error)
-            }
-
-        })
+        }, to: url)
+        .validate(statusCode: 200..<500)
+        .responseToken(completionHandler: completion)
     }
 
-    public func validate(token: String, userID: String, success: @escaping (ValidationResult) -> Void, failure: @escaping (Error) -> Void) {
+    public func validate(token: String,
+                         userID: String,
+                         completion: @escaping (Result<ValidationResult>) -> Void) {
+
         let url = String(format: "%@/claim/verify/validate", baseURL)
 
         let params = [
@@ -141,57 +128,97 @@ public class APIClient {
             "client": appID,
         ]
 
-        Alamofire.request(url, method: .post, parameters: params, encoding: JSONEncoding(), headers: nil)
-            .validate()
-            .responseSwiftyJSON { response in
+        AF.request(url, method: .post, parameters: params, encoding: JSONEncoding(), headers: nil)
+            .validate(statusCode: 200..<500)
+            .responseJSON { response in
 
                 switch response.result {
                 case let .success(json):
+
+                    guard let json = json as? JSON else {
+                        completion(.failure(Error.invalidJSON))
+                        return
+                    }
+
+                    if let errorDescription = json["error_description"] as? String {
+                        completion(.failure(Error.serverError(errorDescription)))
+                        return
+                    }
+
                     let validationResult = ValidationResult(json: json)
-                    success(validationResult)
+                    completion(.success(validationResult))
 
                 case let .failure(error):
-                    failure(error)
+                    completion(.failure(error))
                 }
             }
     }
 }
 
 public extension APIClient {
-    // This helper function chains together the 3 calls needed to enrol photo and get a token to iProov against:
-    func enrolPhotoAndGetVerifyToken(userID: String, image: UIImage, source: PhotoSource, success: @escaping (_ token: String) -> Void, failure: @escaping (Error) -> Void) {
-        getToken(type: .enrol, userID: userID, success: { token in
-            self.enrolPhoto(token: token, image: image, source: source, success: { _ in
-                self.getToken(type: .verify, userID: userID, success: success, failure: failure)
-            }, failure: failure)
-        }, failure: failure)
-    }
-}
 
-extension DataRequest {
-    public static func swiftyJSONResponseSerializer() -> DataResponseSerializer<JSON> {
-        DataResponseSerializer { _, response, data, error in
+    private struct ErrorSink<T> {
+        let failure: (Swift.Error) -> Void
 
-            guard error == nil else { return .failure(error!) }
-
-            if let response = response, [204, 205].contains(response.statusCode) { return .success(.null) }
-
-            guard let validData = data, validData.count > 0 else {
-                return .failure(AFError.responseSerializationFailed(reason: .inputDataNilOrZeroLength))
-            }
-
-            do {
-                let json = try JSON(data: validData)
-                return .success(json)
-            } catch {
-                return .failure(AFError.responseSerializationFailed(reason: .jsonSerializationFailed(error: error)))
+        func onSuccess(_ next: @escaping (T) -> Void) -> (Result<T>) -> Void {
+            return { result in
+                switch result {
+                case let .success(value):
+                    next(value)
+                case let .failure(error):
+                    failure(error)
+                }
             }
         }
     }
 
+    // This helper function chains together the 3 calls needed to enrol photo and get a token to iProov against:
+    func enrolPhotoAndGetVerifyToken(userID: String,
+                                     image: UIImage,
+                                     source: PhotoSource,
+                                     completion: @escaping (Result<String>) -> Void) {
+
+        let errorSink = ErrorSink<String> { completion(.failure($0)) }
+
+        getToken(assuranceType: .genuinePresence, type: .enrol, userID: userID, completion: errorSink.onSuccess { token in
+            self.enrolPhoto(token: token, image: image, source: source, completion: errorSink.onSuccess { token in
+                self.getToken(assuranceType: .genuinePresence, type: .verify, userID: userID, completion: completion)
+            })
+        })
+
+    }
+}
+
+extension DataRequest {
+
     @discardableResult
-    public func responseSwiftyJSON(completionHandler: @escaping (DataResponse<JSON>) -> Void) -> Self {
-        response(responseSerializer: DataRequest.swiftyJSONResponseSerializer(),
-                 completionHandler: completionHandler)
+    public func responseToken(completionHandler: @escaping (Result<String>) -> Void) -> Self {
+
+        responseJSON { response in
+            switch response.result {
+            case let .success(json):
+
+                guard let json = json as? JSON else {
+                    completionHandler(.failure(APIClient.Error.invalidJSON))
+                    return
+                }
+
+                if let errorDescription = json["error_description"] as? String {
+                    completionHandler(.failure(APIClient.Error.serverError(errorDescription)))
+                    return
+                }
+
+                guard let token = json["token"] as? String else {
+                    completionHandler(.failure(APIClient.Error.noToken))
+                    return
+                }
+
+                completionHandler(.success(token))
+
+            case let .failure(error):
+                completionHandler(.failure(error))
+            }
+        }
+
     }
 }

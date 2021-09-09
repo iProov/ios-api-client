@@ -1,7 +1,6 @@
 // Copyright (c) 2021 iProov Ltd. All rights reserved.
 
 import Foundation
-import SwiftyJSON
 
 public struct ValidationResult {
     public let isPassed: Bool
@@ -10,9 +9,19 @@ public struct ValidationResult {
     public let failureReason: String?
 
     init(json: JSON) {
-        isPassed = json["passed"].boolValue
-        token = json["token"].stringValue
-        frame = json["frame"].base64EncodedImage
-        failureReason = json["result"]["reason"].string
+        isPassed = json["passed"] as! Bool
+        token = json["token"] as! String
+        if let frameBase64 = json["frame"] as? String {
+            frame = UIImage(base64String: frameBase64)
+        } else {
+            frame = nil
+        }
+
+        if let resultJSON = json["result"] as? JSON {
+            failureReason = resultJSON["reason"] as? String
+        } else {
+            failureReason = nil
+        }
+
     }
 }

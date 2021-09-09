@@ -2,7 +2,7 @@
 
 ## Introduction
 
-The iProov iOS API Client is a simple wrapper for the [iProov REST API v2](https://secure.iproov.me/docs.html) written in Swift and using [Alamofire](https://github.com/Alamofire/Alamofire) & [SwiftyJSON](https://github.com/SwiftyJSON/Alamofire-SwiftyJSON) for the HTTP networking and JSON serialization/deserialization. We also have an Android API client available [here](https://github.com/iProov/android-api-client).
+The iProov iOS API Client is a simple wrapper for the [iProov REST API v2](https://secure.iproov.me/docs.html) written in Swift and using [Alamofire](https://github.com/Alamofire/Alamofire). We also have an Android API client available [here](https://github.com/iProov/android-api-client).
 
 ## Important security notice
 
@@ -10,7 +10,7 @@ In production, the iProov REST API should only ever be called directly from your
 
 Use of the iOS API Client requires providing it with your API secret. **You should never embed your API secret within a production app**. 
 
-...But of course, if by any chance you happen to use Swift on your [back](https://vapor.codes/)-[end](https://perfect.org/) then you can probably use this code on your server, with just a few modifications (for example, you will need to handle images without UIKit).
+...Although, if by any chance you happen to use Swift on your [back](https://vapor.codes/)-[end](https://perfect.org/) then you can probably use this code on your server, with just a few modifications (for example, you will need to handle images without UIKit).
 
 ## Installation
 
@@ -42,18 +42,23 @@ import iProov
 let apiClient = APIClient(baseURL: "https://eu.rp.secure.iproov.me/api/v2",
                           apiKey: "{{ Your API key }}",
                           secret: "{{ Your API secret }}")
- 
-apiClient.getToken(assuranceType: .genuinePresence, type: .verify, userID: "user@example.com", success: { (token) in
 
-	IProov.launch(token: token, callback: { (status) in
-		...
-	})
+apiClient.getToken(assuranceType: .genuinePresence,
+                   type: .verify,
+                   userID: "user@example.com") { result in
 
-}, failure: { (error) in
+    switch result {
+    case let .success(token):
 
-	print(error)
-            
-})
+        IProov.launch(streamingURL: "https://eu.rp.secure.iproov.me/api/v2",
+                      token: token) { status in
+            print(status)
+        }
+
+    case let .failure(error):
+        print(error)
+    }
+}
 ```
 
 ## License
