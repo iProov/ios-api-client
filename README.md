@@ -39,7 +39,7 @@ Example of using iProov API Client together with iProov to get a verify token fo
 import iProovAPIClient
 import iProov
 
-let apiClient = APIClient(baseURL: "https://eu.rp.secure.iproov.me/api/v2",
+let apiClient = APIClient(baseURL: "https://eu.rp.secure.iproov.me",
                           apiKey: "{{ Your API key }}",
                           secret: "{{ Your API secret }}")
 
@@ -50,7 +50,7 @@ apiClient.getToken(assuranceType: .genuinePresence,
     switch result {
     case let .success(token):
 
-        IProov.launch(streamingURL: "https://eu.rp.secure.iproov.me/api/v2",
+        IProov.launch(streamingURL: "https://eu.rp.secure.iproov.me",
                       token: token) { status in
             print(status)
         }

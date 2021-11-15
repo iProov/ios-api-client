@@ -56,6 +56,17 @@ public class APIClient {
 
     public init(baseURL: String, apiKey: String, secret: String) {
         #warning("You should never embed your API key/secret in client code!")
+
+        var baseURL = baseURL
+
+        if baseURL.hasSuffix("/") {
+            baseURL = String(baseURL.dropLast())
+        }
+
+        if !baseURL.hasSuffix("/api/v2") {
+            baseURL.append("/api/v2")
+        }
+
         self.baseURL = baseURL
         self.apiKey = apiKey
         self.secret = secret
