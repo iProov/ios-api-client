@@ -22,11 +22,6 @@ public enum AssuranceType: String {
     case liveness
 }
 
-public enum Result<T> {
-    case success(T)
-    case failure(Error)
-}
-
 public class APIClient {
     private let baseURL: String
     private let apiKey: String
@@ -76,7 +71,7 @@ public class APIClient {
                          type: ClaimType,
                          userID: String,
                          additionalOptions: [String: Any] = [:],
-                         completion: @escaping (Result<String>) -> Void) {
+                         completion: @escaping (Result<String, Swift.Error>) -> Void) {
 
         let url = String(format: "%@/claim/%@/token", baseURL, type.rawValue)
 
@@ -101,7 +96,7 @@ public class APIClient {
     public func enrolPhoto(token: String,
                            image: UIImage,
                            source: PhotoSource,
-                           completion: @escaping (Result<String>) -> Void) {
+                           completion: @escaping (Result<String, Swift.Error>) -> Void) {
 
         let url = String(format: "%@/claim/enrol/image", baseURL)
 
@@ -126,7 +121,7 @@ public class APIClient {
 
     public func validate(token: String,
                          userID: String,
-                         completion: @escaping (Result<ValidationResult>) -> Void) {
+                         completion: @escaping (Result<ValidationResult, Swift.Error>) -> Void) {
 
         let url = String(format: "%@/claim/verify/validate", baseURL)
 
@@ -171,7 +166,7 @@ public extension APIClient {
     private struct ErrorSink<T> {
         let failure: (Swift.Error) -> Void
 
-        func onSuccess(_ next: @escaping (T) -> Void) -> (Result<T>) -> Void {
+        func onSuccess(_ next: @escaping (T) -> Void) -> (Result<T, Swift.Error>) -> Void {
             return { result in
                 switch result {
                 case let .success(value):
@@ -187,7 +182,7 @@ public extension APIClient {
     func enrolPhotoAndGetVerifyToken(userID: String,
                                      image: UIImage,
                                      source: PhotoSource,
-                                     completion: @escaping (Result<String>) -> Void) {
+                                     completion: @escaping (Result<String, Swift.Error>) -> Void) {
 
         let errorSink = ErrorSink<String> { completion(.failure($0)) }
 
@@ -203,7 +198,7 @@ public extension APIClient {
 extension DataRequest {
 
     @discardableResult
-    public func responseToken(completionHandler: @escaping (Result<String>) -> Void) -> Self {
+    public func responseToken(completionHandler: @escaping (Result<String, Swift.Error>) -> Void) -> Self {
 
         responseJSON { response in
             switch response.result {

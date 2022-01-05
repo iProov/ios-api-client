@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = 'iProovAPIClient'
-  s.version          = '1.0.1'
+  s.version          = '1.1.0'
   s.summary          = 'iOS API Client for iProov REST API v2'
   s.homepage         = 'https://github.com/iproov/ios-api-client'
   s.license          = { :type => 'BSD-3', :file => 'LICENSE' }
