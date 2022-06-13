@@ -1,3 +1,23 @@
+> **Warning**
+> 
+> **Starting June 2022, this repository is no longer being maintained.** The iProov iOS API Client is now made available directly as part of the [iProov iOS Biometrics SDK](https://github.com/iProov/ios).
+>
+> You should upgrade your Podfile from:
+> 
+> ```
+> pod 'iProovAPIClient', :git => 'https://github.com/iProov/ios-api-client.git'
+> ```
+>
+> to:
+>
+> ```
+> pod 'iProovAPIClient', :podspec => 'https://raw.githubusercontent.com/iProov/ios/master/iProovAPIClient/iProovAPIClient.podspec'
+> ```
+>
+> For further details, see the [Upgrade Guide for SDK v9.4](https://github.com/iProov/ios/wiki/Upgrade-Guide#api-client).
+
+---
+
 # iProov iOS API Client
 
 ## Introduction
