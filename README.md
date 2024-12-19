@@ -1,23 +1,3 @@
-> **Warning**
-> 
-> **Starting June 2022, this repository is no longer being maintained.** The iProov iOS API Client is now made available directly as part of the [iProov iOS Biometrics SDK](https://github.com/iProov/ios).
->
-> You should upgrade your Podfile from:
-> 
-> ```
-> pod 'iProovAPIClient', :git => 'https://github.com/iProov/ios-api-client.git'
-> ```
->
-> to:
->
-> ```
-> pod 'iProovAPIClient', :podspec => 'https://raw.githubusercontent.com/iProov/ios/master/iProovAPIClient/iProovAPIClient.podspec'
-> ```
->
-> For further details, see the [Upgrade Guide for SDK v9.4](https://github.com/iProov/ios/wiki/Upgrade-Guide#api-client).
-
----
-
 # iProov iOS API Client
 
 ## Introduction
@@ -48,8 +28,6 @@ And then run `pod install`.
 - `enrolPhoto()` - Once you have an enrolment token, you can enrol a photo against it.
 - `validate()` - Validates an existing token.
 - `enrolPhotoAndGetVerifyToken()` - A helper function which chains together `getToken()` for the enrolment token, `enrolPhoto()` to enrol the photo, and then `getToken()` for the verify token, which you can then use to launch the SDK.
-
-You can find the API-calling code [here](https://github.com/iProov/swift-api-client/blob/master/iProovAPIClient/Classes/APIClient.swift).
 
 ## Example
 

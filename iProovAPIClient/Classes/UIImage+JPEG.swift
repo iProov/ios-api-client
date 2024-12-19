@@ -1,4 +1,4 @@
-// Copyright (c) 2021 iProov Ltd. All rights reserved.
+// Copyright (c) 2024 iProov Ltd. All rights reserved.
 
 import UIKit
 
@@ -11,8 +11,8 @@ extension UIImage {
             return jpegData(compressionQuality: compressionQuality)
         }
 
-        guard let ciImage = ciImage,
-            let cgImage = CIContext(options: nil).createCGImage(ciImage, from: ciImage.extent)
+        guard let ciImage,
+              let cgImage = CIContext(options: nil).createCGImage(ciImage, from: ciImage.extent)
         else { return nil }
 
         return UIImage(cgImage: cgImage).jpegData(compressionQuality: compressionQuality)
