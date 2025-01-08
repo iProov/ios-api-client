@@ -1,6 +1,6 @@
 // Copyright (c) 2024 iProov Ltd. All rights reserved.
 
-import Foundation
+import UIKit
 
 public struct ValidationResult: CustomStringConvertible {
     public let isPassed: Bool

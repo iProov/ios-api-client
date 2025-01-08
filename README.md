@@ -14,10 +14,28 @@ Use of the iOS API Client requires providing it with your API secret. **You shou
 
 ## Installation
 
-The iOS API Client is distributed as a Cocoapods dependency. Simply add the following line to your Podfile:
+### Swift Package Manager
+
+We recommend the iOS API Client is installed as a Swift Package:
+
+1. Select `File` → `Add Package Dependencies…` in the Xcode menu bar.
+
+2. Search for the iOS API Client package using the following URL:
+
+	```
+	https://github.com/iProov/ios-api-client
+	```
+	
+3. Set the _Dependency Rule_ to be _Up to Next Major Version_.
+	
+4. Click _Add Package_ to add the iOS API Client dependency to your Xcode project and to your app target, and then click again to confirm.
+
+### Cocoapods
+
+The iOS API Client can also be installed as a Cocoapods dependency. Simply add the following line to your Podfile:
 
 ```
-pod 'iProovAPIClient', :git => 'https://github.com/iProov/ios-api-client.git'
+pod 'iProovAPIClient'
 ```
 
 And then run `pod install`.
